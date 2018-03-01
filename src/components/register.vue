@@ -1,11 +1,24 @@
 <template>
-  <div class="hello">
+  <div id="registerdiv">
+    <div>
+      <span>返回</span>
+    </div>
     <form>
-      <label>昵称：</label> <input type="text" name="nickname" v-model="nickname"/>
-      <label>姓名：</label> <input type="text" name="name" v-model="name"/>
-      <label>密码：</label> <input type="password" name="password" v-model="password"/>
-      <label>性别：</label> <input type="text" name="sex" v-model="sex"/>
-      <label>年龄：</label> <input type="text" name="age" v-model="age"/>
+      <div>
+        <label>昵称：</label> <input type="text" name="nickname" v-model="nickname"/>
+      </div>
+      <div>
+        <label>姓名：</label> <input type="text" name="name" v-model="name"/>
+      </div>
+      <div>
+        <label>密码：</label> <input type="password" name="password" v-model="password"/>
+      </div>
+      <div>
+        <label>性别：</label> <input type="text" name="sex" v-model="sex"/>
+      </div>
+      <div>
+        <label>年龄：</label> <input type="text" name="age" v-model="age"/>
+      </div>
       <button type="button" @click="register">注册</button>
     </form>
   </div>
@@ -61,4 +74,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#registerdiv{
+  font-size: 0.506667rem;
+}
+input{
+  width: 79%;
+  height: 0.666667rem;
+}
 </style>

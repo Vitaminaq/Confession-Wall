@@ -24,4 +24,7 @@ a{
   text-decoration: none;
   color: #00dcff;
 }
+input{
+  outline: none;
+}
 </style>

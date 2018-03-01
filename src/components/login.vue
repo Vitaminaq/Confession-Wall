@@ -1,11 +1,14 @@
 <template>
   <div class="hello">
+    <div id="tx">
+      <img src="../assets/image/login/tx.jpg">
+    </div>
     <form id="loginFrom">
       <div class="input" id="nkdiv">
-        <label>昵称：</label> <input type="text" name="nickname" v-model="nickname"/>
+        <label>昵称：</label> <input type="text" name="nickname" placeholder="请输入昵称" v-model="nickname"/>
       </div>
       <div class="input">
-        <label>密码：</label> <input type="password" name="password" v-model="password"/>
+        <label>密码：</label> <input type="password" name="password" placeholder="请输入密码" v-model="password"/>
       </div>
       <div id="login-btn">
         <button type="button" @click="login">登录</button>
@@ -44,8 +47,15 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#tx img{
+  height: 1.333333rem;
+  width: 1.333333rem;
+  border-radius: 1.333333rem;
+  border: solid #ADADAD 0.013333rem;
+  margin-top: 40%;
+}
 #loginFrom{
-   margin-top: 50%;
+   margin-top: 15%;
    text-align: left;
    width: 100%;
    font-size: 0.506667rem;
@@ -53,11 +63,14 @@ export default {
 #loginFrom .input{
   width: 90%;
   margin: 0 auto;
-  padding-bottom: 0.133333rem;
+  padding-bottom: 0.2rem;
 }
 #loginFrom input{
-  width: 79%;
-  height: 0.666667rem;
+  width: 76%;
+  height: 0.966667rem;
+  font-size: 0.533333rem;
+  padding-left: 0.266667rem;
+  border-radius: 5px;
 }
 #login-btn{
   width: 100%;
@@ -65,18 +78,18 @@ export default {
 }
 #login-btn button{
   width: 60%;
-  height: 0.8rem;
+  height: 1rem;
   border-style: none;
   border-radius: 5px;
   background-color: #00dcff;
   color: white;
   font-size: 0.453333rem;
-  margin-top: 0.133333rem;
+  margin-top: 0.266667rem;
 }
 .button{
   display: inline-block;
   width: 49%;
-  margin-top: 0.266667rem;
+  margin-top: 0.4rem;
 }
 #register-btn{
   text-align: right;
