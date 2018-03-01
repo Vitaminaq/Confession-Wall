@@ -55,7 +55,7 @@ export default {
   margin-top: 40%;
 }
 #loginFrom{
-   margin-top: 15%;
+   margin-top: 2%;
    text-align: left;
    width: 100%;
    font-size: 0.506667rem;
@@ -71,6 +71,7 @@ export default {
   font-size: 0.533333rem;
   padding-left: 0.266667rem;
   border-radius: 5px;
+  border: solid #ADADAD 1px;
 }
 #login-btn{
   width: 100%;
