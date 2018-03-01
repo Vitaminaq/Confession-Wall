@@ -26,5 +26,7 @@ a{
 }
 input{
   outline: none;
+    border-radius: 5px;
+  border: solid #ADADAD 1px;
 }
 </style>

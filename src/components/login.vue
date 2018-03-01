@@ -52,7 +52,7 @@ export default {
   width: 1.333333rem;
   border-radius: 1.333333rem;
   border: solid #ADADAD 0.013333rem;
-  margin-top: 40%;
+  margin-top: 35%;
 }
 #loginFrom{
    margin-top: 2%;
@@ -70,8 +70,6 @@ export default {
   height: 0.966667rem;
   font-size: 0.533333rem;
   padding-left: 0.266667rem;
-  border-radius: 5px;
-  border: solid #ADADAD 1px;
 }
 #login-btn{
   width: 100%;
