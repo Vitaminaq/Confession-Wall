@@ -13,7 +13,7 @@ Vue.use(Toast, {
   defaultType: 'bottom',
   duration: 1000,
   wordWrap: true,
-  width: '150px'
+  width: '170px'
 })
 
 Vue.config.productionTip = false

@@ -21,7 +21,6 @@
 
 <script>
 import axios from 'axios'
-import Vue from 'vue'
 export default {
   name: 'login',
   data () {
@@ -32,21 +31,15 @@ export default {
   },
   methods: {
     login: function () {
-      if (this.nickname === '' || this.password === '') {
-        Vue.prototype.$toast('昵称密码不能为空')
-      } else {
-        axios.post('/api/user/login', {
-          nickname: this.nickname,
-          password: this.password})
-          .then(function (res) {
-            Vue.prototype.$toast(res.data.mes)
-            console.log(res)
-          })
-          .catch(function (res) {
-            console.log(res)
-            Vue.prototype.$toast('请求失败!')
-          })
-      }
+      axios.post('/api/user/login', {
+        nickname: this.nickname,
+        password: this.password})
+        .then(function (res) {
+          console.log(res)
+        })
+        .catch(function (res) {
+          console.log(res)
+        })
     }
   }
 }

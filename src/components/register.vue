@@ -5,19 +5,19 @@
     </div>
     <form id="registerForm">
       <div class="inputdiv">
-        <label>昵称：</label> <input type="text" placeholder="请输入昵称" name="nickname" v-model="nickname"/>
+        <label>昵称：</label> <input type="text" placeholder="请输入您的昵称" name="nickname" v-model="nickname"/>
       </div>
       <div class="inputdiv">
-        <label>姓名：</label> <input type="text" placeholder="请输入姓名" name="name" v-model="name"/>
+        <label>姓名：</label> <input type="text" placeholder="请输入您的姓名" name="name" v-model="name"/>
       </div>
       <div class="inputdiv">
-        <label>密码：</label> <input type="password" placeholder="请输入密码" name="password" v-model="password"/>
+        <label>密码：</label> <input type="password" placeholder="请输入您的密码" name="password" v-model="password"/>
+      </div>
+      <div class="inputdiv1">
+        <input type="radio" name="sex"/>男 <input type="radio" name="sex"/>女
       </div>
       <div class="inputdiv">
-        <label>性别：</label> <input type="text" placeholder="请输入性别" name="sex" v-model="sex"/>
-      </div>
-      <div class="inputdiv">
-        <label>年龄：</label> <input type="text" placeholder="请输入年龄" name="age" v-model="age"/>
+        <label>年龄：</label> <input type="text" placeholder="请输入您的年龄" name="age" v-model="age"/>
       </div>
       <button type="button" @click="register">注册</button>
     </form>
@@ -62,6 +62,8 @@ export default {
           })
           .catch(function (res) {
             console.log(res)
+            self.closeLoading()
+            Vue.prototype.$toast('请求失败!')
           })
       }
     },
@@ -77,17 +79,19 @@ export default {
 #registerdiv{
   font-size: 0.506667rem;
 }
-.inputdiv{
+.inputdiv, .inputdiv1{
   width: 90%;
   margin: 0 auto;
   padding-bottom: 0.2rem;
 }
-input{
+.inputdiv input{
   width: 77%;
-  height: 0.666667rem;
    height: 0.966667rem;
   font-size: 0.533333rem;
   padding-left: 0.266667rem;
+}
+.inputdiv1 input{
+
 }
 #back-btn{
   width: 95%;
