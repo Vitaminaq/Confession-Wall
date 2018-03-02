@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import axios from 'axios'
-import Vue from 'vue'
+// import axios from 'axios'
+// import Toast from '../common/comjs.js'
 export default {
   name: 'login',
   data () {
@@ -32,21 +32,31 @@ export default {
   },
   methods: {
     login: function () {
-      if (this.nickname === '' || this.password === '') {
-        Vue.prototype.$toast('昵称密码不能为空')
-      } else {
-        axios.post('/api/user/login', {
-          nickname: this.nickname,
-          password: this.password})
-          .then(function (res) {
-            Vue.prototype.$toast(res.data.mes)
-            console.log(res)
-          })
-          .catch(function (res) {
-            console.log(res)
-            Vue.prototype.$toast('请求失败!')
-          })
-      }
+    //   if (this.nickname === '' || this.password === '') {
+    //     Toast.toast('', '昵称密码不能为空')
+    //   } else {
+    //     var self = this
+    //     axios.post('/api/user/login', {
+    //       nickname: this.nickname,
+    //       password: this.password})
+    //       .then(function (res) {
+    //         console.log(res)
+    //         if (res.data.mes === '验证成功!') {
+    //           Toast.toast('loading', '登录中...')
+    //           setTimeout(function () {
+    //             Toast.closeLoading()
+    //           }, 200)
+    //           self.$router.push({path: '/chatroom'})
+    //         } else {
+    //           Toast.toast('', res.data.mes)
+    //         }
+    //       })
+    //       .catch(function (res) {
+    //         console.log(res)
+    //         Toast.toast('', '请求失败!')
+    //       })
+    //   }
+      this.$router.push({path: '/chatroom'})
     }
   }
 }
@@ -94,10 +104,13 @@ export default {
 }
 .button{
   display: inline-block;
-  width: 49%;
+  width: auto;
   margin-top: 0.4rem;
+  margin-left: 0.213333rem;
 }
 #register-btn{
+  width: 66%;
   text-align: right;
+  margin-right: 0.213333rem;
 }
 </style>

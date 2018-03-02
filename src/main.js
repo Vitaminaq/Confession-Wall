@@ -9,6 +9,15 @@ import router from './router'
 import 'vue2-toast/lib/toast.css'
 import Toast from 'vue2-toast'
 
+router.beforeEach(function (to, from, next) {
+  if (from.path === '/') {
+    console.log('dfdsf')
+    // Vue.prototype.$loading('登录中...')
+    next()
+  } else {
+    next()
+  }
+})
 Vue.use(Toast, {
   defaultType: 'bottom',
   duration: 1000,

@@ -14,7 +14,7 @@
         <label>密码：</label> <input type="password" placeholder="请输入您的密码" name="password" v-model="password"/>
       </div>
       <div class="inputdiv1">
-        <input type="radio" name="sex"/>男 <input type="radio" name="sex"/>女
+        <input type="radio" v-model="sex" value="男"/>男 <input type="radio" v-model="sex" value="女" />女
       </div>
       <div class="inputdiv">
         <label>年龄：</label> <input type="text" placeholder="请输入您的年龄" name="age" v-model="age"/>
@@ -26,7 +26,7 @@
 
 <script>
 import axios from 'axios'
-import Vue from 'vue'
+import Toast from '../common/comjs.js'
 
 export default {
   name: 'register',
@@ -42,9 +42,9 @@ export default {
   methods: {
     register: function () {
       if (this.nickname === '' || this.name === '' || this.password === '' || this.sex === '' || this.age === '') {
-        Vue.prototype.$toast('请填写完善信息')
+        Toast.toast('', '请填写完整信息')
       } else {
-        Vue.prototype.$loading('注册中...')
+        Toast.toast('loading', '注册中...')
         let self = this
         axios.post('/api/user/register', {
           nickname: this.nickname,
@@ -53,22 +53,19 @@ export default {
           sex: this.sex,
           age: this.age})
           .then(function (res) {
-            self.closeLoading()
+            Toast.closeLoading()
             console.log(res.data)
-            Vue.prototype.$toast(res.data.mes)
+            Toast.toast('', res.data.mes)
             if (res.data.mes === '注册成功!') {
               self.$router.push({path: '/'})
             }
           })
           .catch(function (res) {
             console.log(res)
-            self.closeLoading()
-            Vue.prototype.$toast('请求失败!')
+            Toast.closeLoading()
+            Toast.toast('', '请求失败!')
           })
       }
-    },
-    closeLoading: function () {
-      Vue.prototype.$loading.close()
     }
   }
 }
@@ -91,7 +88,7 @@ export default {
   padding-left: 0.266667rem;
 }
 .inputdiv1 input{
-
+   outline-color: #00dcff;
 }
 #back-btn{
   width: 95%;
