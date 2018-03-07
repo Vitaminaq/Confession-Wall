@@ -36,7 +36,7 @@ export default {
         comjs.toast('', '昵称密码不能为空')
       } else {
         var self = this
-        axios.post('/api/user/login', {
+        axios.post('http://180.76.53.224:3000/user/login', {
           nickname: this.nickname,
           password: this.password})
           .then(function (res) {
