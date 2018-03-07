@@ -26,7 +26,7 @@
 
 <script>
 import axios from 'axios'
-import Toast from '../common/comjs.js'
+import comjs from '../common/comjs.js'
 
 export default {
   name: 'register',
@@ -42,9 +42,9 @@ export default {
   methods: {
     register: function () {
       if (this.nickname === '' || this.name === '' || this.password === '' || this.sex === '' || this.age === '') {
-        Toast.toast('', '请填写完整信息')
+        comjs.toast('', '请填写完整信息')
       } else {
-        Toast.toast('loading', '注册中...')
+        comjs.toast('loading', '注册中...')
         let self = this
         axios.post('/api/user/register', {
           nickname: this.nickname,
@@ -53,17 +53,17 @@ export default {
           sex: this.sex,
           age: this.age})
           .then(function (res) {
-            Toast.closeLoading()
+            comjs.closeLoading()
             console.log(res.data)
-            Toast.toast('', res.data.mes)
+            comjs.toast('', res.data.mes)
             if (res.data.mes === '注册成功!') {
               self.$router.push({path: '/'})
             }
           })
           .catch(function (res) {
             console.log(res)
-            Toast.closeLoading()
-            Toast.toast('', '请求失败!')
+            comjs.closeLoading()
+            comjs.toast('', '请求失败!')
           })
       }
     }

@@ -20,8 +20,8 @@
 </template>
 
 <script>
-// import axios from 'axios'
-// import Toast from '../common/comjs.js'
+import axios from 'axios'
+import comjs from '../common/comjs.js'
 export default {
   name: 'login',
   data () {
@@ -32,31 +32,30 @@ export default {
   },
   methods: {
     login: function () {
-    //   if (this.nickname === '' || this.password === '') {
-    //     Toast.toast('', '昵称密码不能为空')
-    //   } else {
-    //     var self = this
-    //     axios.post('/api/user/login', {
-    //       nickname: this.nickname,
-    //       password: this.password})
-    //       .then(function (res) {
-    //         console.log(res)
-    //         if (res.data.mes === '验证成功!') {
-    //           Toast.toast('loading', '登录中...')
-    //           setTimeout(function () {
-    //             Toast.closeLoading()
-    //           }, 200)
-    //           self.$router.push({path: '/chatroom'})
-    //         } else {
-    //           Toast.toast('', res.data.mes)
-    //         }
-    //       })
-    //       .catch(function (res) {
-    //         console.log(res)
-    //         Toast.toast('', '请求失败!')
-    //       })
-    //   }
-      this.$router.push({path: '/chatroom'})
+      if (this.nickname === '' || this.password === '') {
+        comjs.toast('', '昵称密码不能为空')
+      } else {
+        var self = this
+        axios.post('/api/user/login', {
+          nickname: this.nickname,
+          password: this.password})
+          .then(function (res) {
+            if (res.data.nickname) {
+              comjs.toast('loading', '登录中...')
+              setTimeout(function () {
+                comjs.closeLoading()
+              }, 200)
+              localStorage.setItem('nickname', res.data.nickname)
+              self.$router.push({path: '/chatroom'})
+            } else {
+              comjs.toast('', res.data.mes)
+            }
+          })
+          .catch(function (res) {
+            console.log(res)
+            comjs.toast('', '请求失败!')
+          })
+      }
     }
   }
 }
