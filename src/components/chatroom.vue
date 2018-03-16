@@ -2,10 +2,11 @@
   <div id="chatroom">
     <div id="header">
       <span>Confenssion Wall</span>
+      <img @click="loginout()" src="../assets/image/chatroom/loginout.png"/>
     </div>
     <div>
-      <ul>
-        <li v-for="item in msg" @click="todetail(item._id)">
+      <div id="divul">
+        <div id="divli" v-for="item in msg" @click="todetail(item._id)">
           <div class="title">
             <span>标题：</span><span>{{item.title}}</span>
           </div>
@@ -18,10 +19,10 @@
            <span class="comment">评论：</span><span class="commentnum">{{item.commentunm}}</span>
            <span class="agreen">赞：</span><span>{{item.clicknum}}</span>
           </div>
-        </li>
+        </div>
         <div id="bottom">
         </div>
-      </ul>
+      </div>
     </div>
     <div id="footer">
       <input type="text" name="talk" @focus="towrite" placeholder="发表言论"/>
@@ -66,6 +67,9 @@ export default {
     },
     towrite: function () {
       this.$router.push({path: '/publish'})
+    },
+    loginout: function () {
+      this.$router.push({path: '/'})
     }
   }
 }
@@ -87,6 +91,13 @@ export default {
   height: 0.96rem;
   line-height: 0.96rem;
 }
+#header img{
+  height: 0.6rem;
+  width: 0.6rem;
+  position: relative;
+  left: 22%;
+  top: 0.09rem;
+}
 #footer{
   position: fixed;
   bottom: 0;
@@ -102,13 +113,13 @@ export default {
 #bottom{
   height: 1.2rem;
 }
-ul {
+#divul {
   margin-top: 0.96rem;
   height: auto;
 /*  border: solid gray 1px;*/
   width: 100%;
 }
-ul li{
+#divli{
   width: 98%;
   text-align: left;
   height: 2rem;
@@ -116,7 +127,7 @@ ul li{
   padding-left: 2%;
   border-bottom: solid #ADADAD 0.013333rem;
 }
-ul li .title{
+.title{
   padding-top: 0.133333rem;
   height: 0.613333rem;
   width: 100%;
@@ -124,7 +135,7 @@ ul li .title{
   font-size: 0.533333rem;
   font-weight: bold;
 }
-ul li .author{
+.author{
   width: 100%;
   height: 0.466667rem;
   font-size: 0.38rem;
@@ -137,28 +148,28 @@ ul li .author{
 .authorname{
   width: 15%;
 }
-ul li .publishtime{
+.publishtime{
   font-size: 0.213333rem;
   color: #ADADAD;
 }
 .publishtxt{
   margin-left: 4%;
 }
-ul li .oparatenum{
+.oparatenum{
   padding-top: 0.106667rem;
   width: 100%;
   font-size: 0.32rem;
   height: 0.4rem;
   color: #ADADAD;
 }
-ul li .author span, ul li .oparatenum span{
+.author span, .oparatenum span{
   display: inline-block;
 }
 .view{
   width: 20%;
 }
 .comment{
-  margin-left: 30%;
+  margin-left: 29%;
 }
 .commentnum{
   width: 7%;

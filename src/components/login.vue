@@ -13,7 +13,7 @@
       <div id="login-btn">
         <button type="button" @click="login">登录</button>
       </div>
-      <router-link to="#"><span class="button">忘记密码？</span></router-link>
+      <router-link to="/reset"><span class="button">忘记密码？</span></router-link>
       <router-link to="/register"><span class="button" id="register-btn">注册新用户</span></router-link>
     </form>
   </div>
@@ -51,8 +51,8 @@ export default {
               comjs.toast('', res.data.mes)
             }
           })
-          .catch(function (res) {
-            console.log(res)
+          .catch(function (err) {
+            console.log(err)
             comjs.toast('', '请求失败!')
           })
       }

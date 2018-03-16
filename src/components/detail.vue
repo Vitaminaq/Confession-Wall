@@ -11,14 +11,14 @@
       <div id="artic">
         <span>{{detail.msg}}</span>
       </div>
-      <div class="cut">
-      </div>
+      <!-- <div class="cut">
+      </div> -->
       <div id="comment">
         <div id="commentitle">
           评论区
         </div>
-        <div class="mincut">
-        </div>
+        <!-- <div class="mincut">
+        </div> -->
         <div class="commentul">
           <div class="commentli" v-for="(item, index) in comment">
             <div class="commentname">
@@ -31,16 +31,32 @@
                 <span class="agreenum">{{item.c_agree.num}}</span>
               </span>
             </div>
-            <div class="commenttxt">
-              <span>{{item.c_msg}}</span>
+            <div class="commenttxt" v-html='item.c_msg'>
             </div>
           </div>
+          <div id="ulbottom"></div>
         </div>
-          
       </div>
       <div id="footer">
-        <input type="text" name="talk" v-model="commentmsg" placeholder="说点什么"/>
-        <button type="button" id="commentbtn" @click="commentit()">发表</button>
+        <div v-show="hidshow1">
+          <input @focus="sayit()" id="input1" type="text" name="" placeholder="说点什么..."/>
+          <span class="agreeauthor">
+            <span class="agreeauthorimg"></span>
+            <span class="agreeaunum">0</span>
+          </span>
+          <span class="cmauthor">
+            <span class="cmauthorimg"></span>
+            <span class="agreeaunum">0</span>
+          </span>
+        </div>
+        <div v-show="!hidshow1" id="commentdiv">
+          <img id="motion" src="../assets/image/detail/input.png">
+          <input @blur="nosay()" id="input2" type="text" name="" v-model="commentmsg" placeholder="可使用输入法自带表情" autofocus="autofocus" />
+          <button type="button" id="commentbtn" @click="commentit()">发表</button>
+          <!-- 
+          <p type="text" name="talk" id="motiontxt" @focus="hidMotion()" contenteditable="true" ref="demo"></p>
+          <vme @emojiSelected="emojiSected" v-if="hidshow3"></vme> -->
+        </div>
       </div>
     </div>
   </div>
@@ -58,54 +74,64 @@ export default {
       comment: [],
       names: [],
       commentmsg: '',
-      state1: true
+      state1: true,
+      hidshow1: true,
+      hidshow2: false,
+      hidshow3: false
     }
   },
   created: function () {
-    var self = this
-    axios.post('/api/user/detail', {id: self.$route.query.id})
-      .then(function (res) {
-        res.data.mes[0].createtime = comjs.time(res.data.mes[0].createtime)
-        self.detail = res.data.mes[0]
-        if (res.data.mes[0].commentxt.length > 0) {
-          for (var i = 0; i < res.data.mes[0].commentxt.length; i++) {
-            res.data.mes[0].commentxt[i].c_time = comjs.time(res.data.mes[0].commentxt[i].c_time)
-            if (res.data.mes[0].commentxt[i].c_agree.name.length === 0) {
-              Vue.set(res.data.mes[0].commentxt[i].c_agree, 'status', false)
-            } else {
-              for (var j = 0; j < res.data.mes[0].commentxt[i].c_agree.name.length; j++) {
-                if (res.data.mes[0].commentxt[i].c_agree.name[j] === localStorage.getItem('nickname')) {
-                  Vue.set(res.data.mes[0].commentxt[i].c_agree, 'status', true)
-                } else {
-                  Vue.set(res.data.mes[0].commentxt[i].c_agree, 'status', false)
+    this.getData()
+  },
+  methods: {
+    getData: function () {
+      var self = this
+      axios.post('/api/user/detail', {id: self.$route.query.id})
+        .then(function (res) {
+          res.data.mes[0].createtime = comjs.time(res.data.mes[0].createtime)
+          self.detail = res.data.mes[0]
+          if (res.data.mes[0].commentxt.length > 0) {
+            for (var i = 0; i < res.data.mes[0].commentxt.length; i++) {
+              res.data.mes[0].commentxt[i].c_time = comjs.time(res.data.mes[0].commentxt[i].c_time)
+              if (res.data.mes[0].commentxt[i].c_agree.name.length === 0) {
+                Vue.set(res.data.mes[0].commentxt[i].c_agree, 'status', false)
+              } else {
+                for (var j = 0; j < res.data.mes[0].commentxt[i].c_agree.name.length; j++) {
+                  if (res.data.mes[0].commentxt[i].c_agree.name[j] === localStorage.getItem('nickname')) {
+                    Vue.set(res.data.mes[0].commentxt[i].c_agree, 'status', true)
+                  } else {
+                    Vue.set(res.data.mes[0].commentxt[i].c_agree, 'status', false)
+                  }
                 }
               }
             }
           }
-        }
-        self.comment = res.data.mes[0].commentxt.reverse()
-        console.log(self.comment)
-      })
-      .catch(function (err) {
-        console.log(err)
-        comjs.toast('', '请求失败!')
-      })
-  },
-  methods: {
-    commentit: function () {
-      var self = this
-      axios.post('/api/user/comment', {id: self.$route.query.id, nickname: localStorage.getItem('nickname'), msg: self.commentmsg})
-        .then(function (res) {
-          comjs.toast('loading', '评论中...')
-          setTimeout(function () {
-            comjs.closeLoading()
-          }, 200)
-          location.reload()
+          self.comment = res.data.mes[0].commentxt.reverse()
         })
         .catch(function (err) {
           console.log(err)
           comjs.toast('', '请求失败!')
         })
+    },
+    commentit: function () {
+      var self = this
+      if (this.commentmsg === '') {
+        comjs.toast('', '评论不能为空!')
+      } else {
+        axios.post('/api/user/comment', {id: self.$route.query.id, nickname: localStorage.getItem('nickname'), msg: self.commentmsg})
+          .then(function (res) {
+            comjs.toast('loading', '评论中...')
+            setTimeout(function () {
+              comjs.closeLoading()
+            }, 200)
+            self.getData()
+            self.commentmsg = ''
+          })
+          .catch(function (err) {
+            console.log(err)
+            comjs.toast('', '请求失败!')
+          })
+      }
     },
     agreeit: function (index) {
       var self = this
@@ -118,7 +144,6 @@ export default {
         } else {
           count++
         }
-        console.log(count)
         axios.post('/api/user/agree/comment', {
           id: self.$route.query.id,
           nickname: localStorage.getItem('nickname'),
@@ -145,6 +170,15 @@ export default {
             self.state1 = true
           })
       }
+    },
+    sayit: function () {
+      this.hidshow1 = false
+      setTimeout(function () {
+        document.getElementById('input2').focus()
+      },0)  
+    },
+    nosay: function () {
+      this.hidshow1 = true
     }
   }
 }
@@ -154,13 +188,13 @@ export default {
 <style scoped>
 #detailcontent h1{
   padding-top: 0.4rem;
-  font-size: 0.533333rem;
+  font-size: 0.55rem;
 }
 #author{
   width: 90%;
   padding-top: 0.333333rem;
   margin: 0 auto;
-  font-size: 0.213333rem;
+  font-size: 0.3rem;
   text-align: left;
   color: #ADADAD;
 }
@@ -171,7 +205,7 @@ export default {
   width: 20%;
 }
 #artic{
-  font-size: 0.4rem;
+  font-size: 0.45rem;
   text-align: left;
   height: auto;
   width: 90%;
@@ -187,10 +221,13 @@ export default {
 #comment{
   text-align: left;
   height: auto;
+  overflow-y: auto;
 }
 #commentitle{
-  font-size: 0.48rem;
-  width: 90%;
+  border-top: #ADADAD solid 0.066667rem;
+  border-bottom: #ADADAD solid 1px;
+  font-size: 0.5rem;
+  padding-left: 0.533333rem;
   height: 1.066667rem;
   margin: 0 auto;
   line-height: 1.066667rem;
@@ -201,9 +238,12 @@ export default {
   background-color: #adadad75;
 }
 .commentul{
-  height: 10.666667rem;
+  height: auto;
   width: 100%;
   overflow-y: auto;
+}
+#ulbottom{
+  height: 1.2rem;
 }
 .commentli{
   height: auto;
@@ -212,15 +252,15 @@ export default {
   padding-bottom: 0.2rem;
 }
 .commentname{
-  font-size: 0.36rem;
-  height: 0.4rem;
+  font-size: 0.4rem;
+  height: 0.46rem;
   padding-left: 0.8rem;
   color: #ADADAD;
   padding-top: 0.2rem;
 }
 .commentmsg{
   padding-top: 0.106667rem;
-  font-size: 0.213333rem;
+  font-size: 0.3rem;
   color: #ADADAD;
   height: 0.466667rem;
   position: relative;
@@ -235,17 +275,50 @@ export default {
   top: -0.04rem;
   padding-left: 0.133333rem;
 }
-.agreeimg{
+.agreeimg, .agreeimged{
   height: 0.426667rem;
   width: 0.426667rem;
-  background-image: url(../assets/image/chatroom/click.png);
   background-size: cover;
 }
+.agreeimg{
+  background-image: url(../assets/image/chatroom/click.png);
+}
 .agreeimged{
-  height: 0.426667rem;
-  width: 0.426667rem;
+  background-image: url(../assets/image/chatroom/clicked.png);
+}
+.agreeauthor{
+  display: inline-block;
+  width: auto;
+  padding-left: 0.4rem;
+  padding-top: 0.133333rem;
+}
+.agreeauthorimg{
+  display: inline-block;
+  height: 0.7rem;
+  width: 0.7rem;
   background-image: url(../assets/image/chatroom/clicked.png);
   background-size: cover;
+}
+.agreeaunum{
+  font-size: 0.4rem;
+  position: relative;
+  display: inline-block;
+  width: 1.066667rem;
+  overflow-x: hidden;
+  bottom: 0.04rem;
+  right: 0.20rem;
+  color: #ADADAD;
+}
+.cmauthorimg{
+  margin-left: -0.48rem;
+  display: inline-block;
+  height: 0.7rem;
+  width: 0.7rem;
+  background-image: url(../assets/image/detail/comment.png);
+  background-size: cover;
+}
+.cmaunum{
+  font-size: 0.426667rem;
 }
 .commentmsg img{
   width: 0.426667rem;
@@ -263,7 +336,7 @@ export default {
 .commenttxt{
   padding-top: 0.133333rem;
   padding-left: 0.8rem;
-  font-size: 0.4rem;
+  font-size: 0.42rem;
 }
 #back-btn{
   width: 95%;
@@ -293,21 +366,57 @@ export default {
   border-top: solid #ADADAD 1px;
   background-color: white;
   width: 100%;
-  display: table;
+  text-align: left;
+  overflow: hidden;
 }
-#footer input{
-  width: 65%;
-  height: 0.7rem;
+#footer #input1{
+  width: 45%;
+  height: 0.8rem;
+  border-radius: 50px;
+  padding-left: 0.666667rem;
+  position: relative;
+  top: -0.27333rem;
+  left: 0.266667rem;
+  font-size: 0.5rem;
+}
+#input2{
+  width: 64%;
+  height: 0.8rem;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  font-size: 0.5rem;
+  border-radius: 0;
   padding-left: 0.133333rem;
-  font-size: 0.4rem;
-  display: table-cell;
-  vertical-align: middle;
+  position: relative;
+  bottom: 0.266667rem;
+}
+/*#footer p{
+  display: inline-block;
+  width: 60%;
+  height: 0.8rem;
+  overflow-y: hidden;
+  padding-left: 0.133333rem;
+  text-align: left;
+  font-size: 0.6rem;
+  border-radius: 5px;
+  border: solid #ADADAD 1px;
+  outline: none;
+}*/
+#motion{
+  height: 0.933333rem;
+  width: 0.933333rem;
+  margin-left: 0.266667rem;
+  padding-top: 0.026667rem;
+}
+#commentdiv{
+  padding-top: 0.07rem;
 }
 #commentbtn{
-  margin-left: 5%;
   background: #00dcff;
-  display: table-cell;
-  vertical-align: middle;
+  position: relative;
+  top: -0.266667rem;
+  right: -0.08rem;
   border: solid white 1px;
   border-radius: 5px;
   color: white;
