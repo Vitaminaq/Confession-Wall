@@ -11,11 +11,11 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    { path: '/', name: 'login', component: login },
-    { path: '/register', name: 'register', component: register },
-    { path: '/chatroom', name: 'chatroom', component: chatroom },
-    { path: '/detail', name: 'detail', component: detail },
-    { path: '/publish', name: 'publish', component: publish },
-    { path: '/reset', name: 'reset', component: reset }
+    { path: '/', name: 'login', component: login, meta: { keepAlive: false } },
+    { path: '/register', name: 'register', component: register, meta: { keepAlive: false } },
+    { path: '/chatroom', name: 'chatroom', component: chatroom, meta: { keepAlive: true } },
+    { path: '/detail', name: 'detail', component: detail, meta: { keepAlive: false } },
+    { path: '/publish', name: 'publish', component: publish, meta: { keepAlive: false } },
+    { path: '/reset', name: 'reset', component: reset, meta: { keepAlive: false } }
   ]
 })

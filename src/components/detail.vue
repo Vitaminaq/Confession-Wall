@@ -2,7 +2,7 @@
   <div>
     <div id="detailcontent">
       <div id="back-btn">
-        <router-link to="/chatroom"><button type="button"><span>返回</span></button></router-link>
+        <button type="button" @click="back()"><span>返回</span></button>
       </div>
       <h1>{{detail.title}}</h1>
       <div id="author">
@@ -11,14 +11,10 @@
       <div id="artic">
         <span>{{detail.msg}}</span>
       </div>
-      <!-- <div class="cut">
-      </div> -->
       <div id="comment">
         <div id="commentitle">
           评论区
         </div>
-        <!-- <div class="mincut">
-        </div> -->
         <div class="commentul">
           <div class="commentli" v-for="(item, index) in comment">
             <div class="commentname">
@@ -40,22 +36,19 @@
       <div id="footer">
         <div v-show="hidshow1">
           <input @focus="sayit()" id="input1" type="text" name="" placeholder="说点什么..."/>
-          <span class="agreeauthor">
-            <span class="agreeauthorimg"></span>
-            <span class="agreeaunum">0</span>
+          <span class="agreeauthor" @click="agreeauthor()">
+            <span :class="status ? 'agreeauthorimged' : 'agreeauthorimg'"></span>
+            <span class="agreeaunum">{{num}}</span>
           </span>
           <span class="cmauthor">
             <span class="cmauthorimg"></span>
-            <span class="agreeaunum">0</span>
+            <span class="agreeaunum">{{detail.commentunm}}</span>
           </span>
         </div>
         <div v-show="!hidshow1" id="commentdiv">
           <img id="motion" src="../assets/image/detail/input.png">
-          <input @blur="nosay()" id="input2" type="text" name="" v-model="commentmsg" placeholder="可使用输入法自带表情" autofocus="autofocus" />
+          <input @blur="nosay()" @keyup="filter()" id="input2" type="text" name="" v-model="commentmsg" placeholder="可使用输入法自带表情" autofocus="autofocus" />
           <button type="button" id="commentbtn" @click="commentit()">发表</button>
-          <!-- 
-          <p type="text" name="talk" id="motiontxt" @focus="hidMotion()" contenteditable="true" ref="demo"></p>
-          <vme @emojiSelected="emojiSected" v-if="hidshow3"></vme> -->
         </div>
       </div>
     </div>
@@ -70,17 +63,22 @@ export default {
   name: 'detail',
   data () {
     return {
-      detail: [],
+      detail: '',
       comment: [],
       names: [],
+      num: '',
+      id: '',
+      status: null,
       commentmsg: '',
       state1: true,
+      state2: true,
       hidshow1: true,
       hidshow2: false,
       hidshow3: false
     }
   },
   created: function () {
+    this.id = this.$route.query.id
     this.getData()
   },
   methods: {
@@ -89,7 +87,17 @@ export default {
       axios.post('/api/user/detail', {id: self.$route.query.id})
         .then(function (res) {
           res.data.mes[0].createtime = comjs.time(res.data.mes[0].createtime)
-          self.detail = res.data.mes[0]
+            if (res.data.mes[0].click.name.length === 0) {
+              Vue.set(res.data.mes[0].click, 'status', false)
+            } else {
+              for (var n = 0; n < res.data.mes[0].click.name.length; n++) { 
+                if (res.data.mes[0].click.name[n] === localStorage.getItem('nickname')) {
+                  Vue.set(res.data.mes[0].click, 'status', true)
+                } else {
+                  Vue.set(res.data.mes[0].click, 'status', false)
+                }
+              }
+            }
           if (res.data.mes[0].commentxt.length > 0) {
             for (var i = 0; i < res.data.mes[0].commentxt.length; i++) {
               res.data.mes[0].commentxt[i].c_time = comjs.time(res.data.mes[0].commentxt[i].c_time)
@@ -106,12 +114,19 @@ export default {
               }
             }
           }
+          self.detail = res.data.mes[0]
+          self.num = res.data.mes[0].click.num
+          self.status = self.detail.click.status
           self.comment = res.data.mes[0].commentxt.reverse()
         })
         .catch(function (err) {
           console.log(err)
           comjs.toast('', '请求失败!')
         })
+    },
+    filter: function () {
+      var reg = new RegExp('傻逼', 'g')
+      this.commentmsg = this.commentmsg.replace(reg, '***')
     },
     commentit: function () {
       var self = this
@@ -130,6 +145,42 @@ export default {
           .catch(function (err) {
             console.log(err)
             comjs.toast('', '请求失败!')
+          })
+      }
+    },
+    agreeauthor: function () {
+      var self = this
+      var count = 0
+      if (this.state2 === true) {
+        this.state2 = false
+        if (self.status === true) {
+          count--
+        } else {
+          count++
+        }
+        axios.post('/api/user/artic/agree', {
+          id: self.$route.query.id,
+          nickname: localStorage.getItem('nickname'),
+          count: count})
+          .then(function (res) {
+            if (res.data.mes === '点赞成功!') {
+              if (self.status === true) {
+                self.status = false
+                self.num = self.num - 1
+              } else {
+                self.status = true
+                self.num = self.num + 1
+              }
+              self.state2 = true
+            } else {
+              comjs.toast('', '请求失败!')
+              self.state2 = true
+            }
+          })
+          .catch(function (err) {
+            console.log(err)
+            comjs.toast('', '请求失败!')
+            self.state2 = true
           })
       }
     },
@@ -175,10 +226,14 @@ export default {
       this.hidshow1 = false
       setTimeout(function () {
         document.getElementById('input2').focus()
-      },0)  
+      }, 0)
     },
     nosay: function () {
       this.hidshow1 = true
+    },
+    back: function () {
+      // this.$router.push({path: '/chatroom?id=' + this.id })
+      this.$router.go(-1)
     }
   }
 }
@@ -290,9 +345,16 @@ export default {
   display: inline-block;
   width: auto;
   padding-left: 0.4rem;
-  padding-top: 0.133333rem;
+  padding-top: 0.05rem;
 }
 .agreeauthorimg{
+  display: inline-block;
+  height: 0.7rem;
+  width: 0.7rem;
+  background-image: url(../assets/image/chatroom/click.png);
+  background-size: cover;
+}
+.agreeauthorimged{
   display: inline-block;
   height: 0.7rem;
   width: 0.7rem;
@@ -305,7 +367,7 @@ export default {
   display: inline-block;
   width: 1.066667rem;
   overflow-x: hidden;
-  bottom: 0.04rem;
+  bottom: 0.09rem;
   right: 0.20rem;
   color: #ADADAD;
 }
@@ -375,7 +437,7 @@ export default {
   border-radius: 50px;
   padding-left: 0.666667rem;
   position: relative;
-  top: -0.27333rem;
+  top: -0.19rem;
   left: 0.266667rem;
   font-size: 0.5rem;
 }

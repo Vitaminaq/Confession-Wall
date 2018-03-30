@@ -4,7 +4,8 @@
       <span>Confenssion Wall</span>
       <img @click="loginout()" src="../assets/image/chatroom/loginout.png"/>
     </div>
-    <div>
+    <v-scroller
+    :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller" style="height:18rem; margin-top: 0.96rem;">
       <div id="divul">
         <div id="divli" v-for="item in msg" @click="todetail(item._id)">
           <div class="title">
@@ -17,53 +18,135 @@
           <div class="oparatenum">
            <span>浏览量：</span><span class="view">{{item.viewnum}}</span>
            <span class="comment">评论：</span><span class="commentnum">{{item.commentunm}}</span>
-           <span class="agreen">赞：</span><span>{{item.clicknum}}</span>
+           <span class="agreen">赞：</span><span>{{item.click.num}}</span>
           </div>
         </div>
-        <div id="bottom">
-        </div>
+        <!-- <div id="bottom">
+        </div> -->
       </div>
-    </div>
+    </v-scroller>
     <div id="footer">
       <input type="text" name="talk" @focus="towrite" placeholder="发表言论"/>
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios'
-import comjs from '../common/comjs.js'
+import comjs from '../common/comjs'
+import VueScroller from 'vue-scroller'
+// import { mapRules, mapModules } from 'vuet'
 export default {
   name: 'chatroom',
+  components: {
+    VueScroller
+  },
   data () {
     return {
-      msg: []
+      msg: [],
+      limit: 15,
+      page: 0,
+      pdlist: []
+    }
+  },
+  // mixins: [
+  //     mapModules({ data: 'page-chatroom' }),
+  //     mapRules({ route: 'page-chatroom' })
+  // ],
+  watch: {
+    $route: function (to, from) {
+      var self = this
+      if (to.path === '/chatroom') {
+        if (from.path === '/detail') {
+        if (localStorage.getItem('top')) {
+              setTimeout(function () {
+                self.$refs.my_scroller.scrollTo(0, localStorage.getItem('top'))
+                localStorage.removeItem('top')
+                to.meta.keepAlive = true
+              }, 10)
+            }
+        } else if (from.path === '/') {
+          to.meta.keepAlive = true
+        } 
+      }
+      if (to.path === '/publish') {
+        from.meta.keepAlive = false
+      }
+      if (to.path === '/detail') {
+        from.meta.keepAlive = true
+      }
     }
   },
   created: function () {
-    var self = this
-    axios.get('/api/user/chatroomsg')
-      .then(function (res) {
-        for (var i = 0; i < res.data.mes.length; i++) {
-          res.data.mes[i].createtime = comjs.time(res.data.mes[i].createtime)
-        }
-        self.msg = res.data.mes
-      })
-      .catch(function (res) {
-        console.log(res)
-        comjs.toast('', '请求失败!')
-      })
   },
   methods: {
-    todetail: function (id) {
-      axios.post('/api/user/view', {id: id})
+    refresh: function (done) {
+      this.page = 0
+      var self = this
+      var url = '/api/user/chatroomsg?limit=' + this.limit + '&page=' + this.page
+      axios.get(url)
         .then(function (res) {
+          self.page++
+          for (var i = 0; i < res.data.mes.length; i++) {
+            res.data.mes[i].createtime = comjs.time(res.data.mes[i].createtime)
+          }
+          self.msg = res.data.mes
+          done(false)
+          comjs.toast('', '刷新成功!')
         })
         .catch(function (res) {
           console.log(res)
           comjs.toast('', '请求失败!')
         })
-      this.$router.push({path: '/detail?id=' + id})
+    },
+    infinite: function (done) {
+      var refreshData
+      var self = this
+      var url = '/api/user/chatroomsg?limit=' + this.limit + '&page=' + this.page
+        axios.get(url)
+          .then(function (res) {
+            document.getElementsByClassName('loading-layer')[0].style.height = 100 + 'px'
+            self.page++
+            if (res.data.mes === '暂无信息') {
+              done(true)
+            } else {
+              for (var i = 0; i < res.data.mes.length; i++) {
+                res.data.mes[i].createtime = comjs.time(res.data.mes[i].createtime)
+              }
+              refreshData = res.data.mes
+              if (refreshData.length < self.limit) {
+                self.msg = self.msg.concat(refreshData)
+                done(true)
+              } else {
+                for (var i = 0; i < refreshData.length - 1; i++) {
+                  self.msg.push(refreshData[i])
+                }
+                // VueScroller.finishInfinite(true)
+                done(false)
+              }
+            }
+            // if (localStorage.getItem('top')) {
+            //   setTimeout(function () {
+            //     self.$refs.my_scroller.scrollTo(0, localStorage.getItem('top'))
+            //     localStorage.removeItem('top')
+            //   }, 10)
+            // } 
+          })
+          .catch(function (res) {
+            console.log(res)
+            comjs.toast('', '请求失败!')
+          })
+    },
+    todetail: function (id) {
+      var self = this
+      axios.post('/api/user/view', {id: id})
+        .then(function (res) {
+          localStorage.setItem('top', self.$refs.my_scroller.getPosition().top)
+          self.$router.push({path: '/detail?id=' + id})
+        })
+        .catch(function (res) {
+          console.log(res)
+          comjs.toast('', '请求失败!')
+        })
     },
     towrite: function () {
       this.$router.push({path: '/publish'})
@@ -90,6 +173,7 @@ export default {
   color: white;
   height: 0.96rem;
   line-height: 0.96rem;
+  z-index: 999;
 }
 #header img{
   height: 0.6rem;
@@ -114,7 +198,6 @@ export default {
   height: 1.2rem;
 }
 #divul {
-  margin-top: 0.96rem;
   height: auto;
 /*  border: solid gray 1px;*/
   width: 100%;
@@ -185,5 +268,8 @@ export default {
   font-size: 0.4rem;
   display: table-cell;
   vertical-align: middle;
+}
+.loading-layer{
+  height: 100px!important;
 }
 </style>
