@@ -18,7 +18,10 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
-# 演示地址(请打开浏览器手机模式预览)
+### 后台代码
+[https://github.com/Vitaminaq/cfsw-nodeserver](https://github.com/Vitaminaq/cfsw-nodeserver)
+
+### 演示地址(请打开浏览器手机模式预览)
 [cfswall](http://180.76.53.224)
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
