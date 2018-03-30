@@ -6,6 +6,10 @@ import chatroom from '@/components/chatroom'
 import detail from '@/components/detail'
 import publish from '@/components/publish'
 import reset from '@/components/reset'
+Router.prototype.goBack = function () { 
+　　this.isBack = true
+　　window.history.go(-1)
+}
 
 Vue.use(Router)
 

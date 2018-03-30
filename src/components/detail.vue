@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="detail">
     <div id="detailcontent">
       <div id="back-btn">
         <button type="button" @click="back()"><span>返回</span></button>
@@ -241,6 +241,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#detail{
+  height: 100%;
+  overflow-y: auto;
+}
 #detailcontent h1{
   padding-top: 0.4rem;
   font-size: 0.55rem;
