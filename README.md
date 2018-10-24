@@ -24,7 +24,7 @@ npm run build --report
 ### 演示地址(请打开浏览器手机模式预览,tips:可能服务器已经不续费了)
 [cfswall](http://180.76.53.224)
 
-### 由于这是刚学vue所写的代码，写的很差劲，项目重构地址:
+### 由于这是刚学vue所写的代码，写的很差劲，项目重构地址,风格和代码质量有了很大提升，并运用了typescript,vuex以及vue-rescroll，欢迎过去start:
 [https://github.com/Vitaminaq/vue-typescript-vuex](https://github.com/Vitaminaq/vue-typescript-vuex)
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
