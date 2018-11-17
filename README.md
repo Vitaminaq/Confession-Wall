@@ -26,5 +26,5 @@ npm run build --report
 
 ### 由于这是刚学vue所写的代码，写的很差劲，项目重构地址,风格和代码质量有了很大提升，并运用了typescript,vuex以及vue-rescroll，欢迎过去start:
 [https://github.com/Vitaminaq/vue-typescript-vuex](https://github.com/Vitaminaq/vue-typescript-vuex)
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+### 以及基于vue-cli3.0，使用typescript加vuex-class.js插件，用类的方法来实现vuex的究极体vue 2.0项目地址，大力推荐，代码风格撸起来贼爽，有问题的同学可以交流交流。后面等小右更新到vue 3.0基本就已经全部支持ts了。
+[https://github.com/Vitaminaq/cfsw-vue-cli3.0](https://github.com/Vitaminaq/cfsw-vue-cli3.0)
