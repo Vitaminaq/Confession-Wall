@@ -18,6 +18,8 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
+#### tips
+初识vue写的，不再更新代码，最新学习路线，请移步下面链接，一起加油努力，欢迎留言。
 #### 后台代码
 [https://github.com/Vitaminaq/cfsw-nodeserver](https://github.com/Vitaminaq/cfsw-nodeserver)
 
